@@ -1,8 +1,9 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
+	"github.com/Zapi-web/auto-ricer/internal/executor"
 	"github.com/Zapi-web/auto-ricer/internal/watcher"
 )
 
@@ -12,13 +13,15 @@ func main() {
 	watch, err := watcher.NewWatcher(path)
 
 	if err != nil {
-		log.Fatal("Failed to create a watcher: %w", err)
+		fmt.Println("Failed to create a watcher: %w", err)
 	}
 	defer watch.Close()
 
 	err = watch.Watch()
 
 	if err != nil {
-		log.Fatal("Failed to watch a dir: %w", err)
+		fmt.Println("Failed to watch a dir: %w", err)
 	}
+
+	executor.UpdateTheme(watch.Events)	
 }

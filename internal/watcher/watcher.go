@@ -3,6 +3,7 @@ package watcher
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/mitchellh/go-homedir"
@@ -10,7 +11,7 @@ import (
 
 type Watcher struct {
 	watcher *fsnotify.Watcher
-	events chan string
+	Events chan string
 	path string
 }
 
@@ -28,7 +29,7 @@ func NewWatcher(path string) (*Watcher,error) {
 
 	return &Watcher{
 		watcher: watcher,
-		events: make(chan string),
+		Events: make(chan string, 10),
 		path: expandedPath,
 	}, nil
 }
@@ -42,7 +43,9 @@ func (w *Watcher) Watch() error {
 				return
 			}
 			if event.Has(fsnotify.Write) {
-				log.Println(event.Name)
+				if (strings.HasSuffix(event.Name, ".jpg") || strings.HasSuffix(event.Name, ".png")) {
+					w.Events <- event.Name
+				}
 			}
 		case err, ok := <-w.watcher.Errors:
 			if !ok {

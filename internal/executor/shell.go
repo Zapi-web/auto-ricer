@@ -1,12 +1,13 @@
 package executor
 
 import (
-	"log"
 	"os/exec"
 	"time"
+
+	"github.com/Zapi-web/auto-ricer/internal/logger"
 )
 
-func UpdateTheme(ch chan string) {
+func UpdateTheme(ch chan string, path string) {
 	debDur := 200 * time.Millisecond
 	var timer *time.Timer
 
@@ -16,15 +17,17 @@ func UpdateTheme(ch chan string) {
 		}
 
 		timer = time.AfterFunc(debDur,  func() {
-			cmd := exec.Command("/bin/bash", "./scripts/update_theme.sh", event)
-			
+			cmd := exec.Command("/bin/bash", path, event)
+
 			err := cmd.Run()
 
 			if err != nil {
-				log.Println(err)
+				logger.Log.Error("Script failed", "event", event, "error", err)
+				return
 			}
+			logger.Log.Info("Script successfully executed")
 		})
 
-		log.Println("new event:",event)
+		logger.Log.Debug("new event from channel", "event", event)
 	}
 }

@@ -1,0 +1,16 @@
+[Unit]
+Description=Auto-Ricer Watchdog Service
+After=graphical-session.target
+
+[Service]
+Type=simple
+
+ExecStart=/home/USER/path/to/auto-ricer/cmd/watchdog/auto-ricer -dir /home/USER/path/to/auto-ricer/pictures -sh /home/USER/path/to/auto-ricer/scripts/update_theme.sh
+
+Restart=always
+RestartSec=3
+
+WorkingDirectory=/home/USER/path/to/auto-ricer
+
+[Install]
+WantedBy=default.target

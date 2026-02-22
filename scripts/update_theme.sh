@@ -11,3 +11,4 @@ if [ ! -f "$1" ]; then
 fi
 
 /usr/bin/pipx run pywal -i "$1"
+plasma-apply-wallpaper "$1"
